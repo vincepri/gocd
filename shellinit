@@ -1,0 +1,25 @@
+function gocd {
+    if [[ $1 == "-shellinit" ]]; then
+        echo $($GOPATH/bin/gocd -shellinit)
+        return 0
+    fi
+    dir=$($GOPATH/bin/gocd $1)
+    RESULT=$?
+    if [[ RESULT -eq 0 ]]; then
+        cd $dir
+    else
+        printf "$dir\n"
+    fi
+}
+
+_cli_bash_autocomplete() {
+    local cur prev opts base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts=$($GOPATH/bin/${COMP_WORDS[@]:0:$COMP_CWORD} --generate-bash-completion)
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    return 0
+}
+
+complete -F _cli_bash_autocomplete gocd
