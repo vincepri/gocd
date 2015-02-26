@@ -14,6 +14,8 @@ var SrcPath string
 var PathMap map[string][]string
 
 func main() {
+	LoadCache()
+	defer StoreCache()
 	SrcPath = os.Getenv("GOPATH") + "/src/"
 	PathMap = make(map[string][]string)
 	app := cli.NewApp()
